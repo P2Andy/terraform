@@ -16,9 +16,6 @@ resource "aws_launch_configuration" "example" {
   lifecycle {
     create_before_destroy = true
   }
-    tags = {
-	Name = "terraform-example"
-    }
 }
 
 resource "aws_autoscaling_group" "example" {
@@ -111,10 +108,15 @@ resource "aws_lb_target_group" "asg" {
 resource "aws_lb_listener_rule" "asg" {
     listener_arn = aws_lb_listener.http.arn
     priority = 100
-    condition {
-	field = "path-pattern"
-    values = ["*"]
+#    condition {
+#	field = "path-pattern"
+#    values = ["*"]
+#    }
+  condition {
+    path_pattern {
+      values = ["*"]
     }
+  }
     action {
 	type = "forward"
 	target_group_arn = aws_lb_target_group.asg.arn
